@@ -109,7 +109,7 @@ The Nordic News Sentiment & Engagement Tracker is a comprehensive data analytics
 **Purpose**: Manages data storage and retrieval.
 
 **Key Features**:
-- SQLite for development, PostgreSQL for production
+- MSSQL for development, PostgreSQL for production
 - Article storage and retrieval
 - Sentiment analysis data storage
 - Engagement metrics tracking
@@ -187,7 +187,7 @@ The Nordic News Sentiment & Engagement Tracker is a comprehensive data analytics
 - **Seaborn**: Statistical visualization
 
 ### Database
-- **SQLite**: Development database
+- **MSSQL**: Development database
 - **PostgreSQL**: Production database
 - **Redis**: Caching and session storage
 
@@ -234,7 +234,7 @@ The Nordic News Sentiment & Engagement Tracker is a comprehensive data analytics
 
 ## Development Workflow
 
-1. **Local Development**: Use SQLite and local configuration
+1. **Local Development**: Use MSSQL and local configuration
 2. **Testing**: Comprehensive unit and integration tests
 3. **Staging**: Docker-based staging environment
 4. **Production**: Containerized deployment with PostgreSQL

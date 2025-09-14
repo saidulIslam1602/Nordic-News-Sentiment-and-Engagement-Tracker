@@ -5,10 +5,10 @@ database:
   development:
     type: mssql
     server: "localhost"
-    port: 1433
+    port: 1435
     database: "nordic_news_dev"
     username: "sa"
-    password: "${MSSQL_PASSWORD}"
+    password: "YourStrong@Passw0rd"
     driver: "ODBC Driver 17 for SQL Server"
   production:
     type: mssql
