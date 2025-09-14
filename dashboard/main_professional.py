@@ -319,12 +319,11 @@ def show_sentiment_analysis():
     st.subheader("😊 Content Sentiment Analysis")
     
     # Sample sentiment data
-    dates = pd.date_range(start=datetime.now() - timedelta(days=30), end=datetime.now(), freq='D')
     sentiment_data = pd.DataFrame({
-        'Date': dates,
-        'Positive': [45 + i * 0.2 + (i % 5) * 2 for i in range(len(dates))],
-        'Neutral': [35 + i * 0.1 + (i % 7) * 1 for i in range(len(dates))],
-        'Negative': [20 - i * 0.1 + (i % 3) * 1 for i in range(len(dates))]
+        'Date': pd.date_range(start=datetime.now() - timedelta(days=30), end=datetime.now(), freq='D'),
+        'Positive': [45 + i * 0.2 + (i % 5) * 2 for i in range(30)],
+        'Neutral': [35 + i * 0.1 + (i % 7) * 1 for i in range(30)],
+        'Negative': [20 - i * 0.1 + (i % 3) * 1 for i in range(30)]
     })
     
     # Clean area chart

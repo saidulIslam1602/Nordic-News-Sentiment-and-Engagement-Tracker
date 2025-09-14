@@ -496,11 +496,18 @@ class DatabaseManager:
                 engagement_rate = (clicks / views * 100) if views > 0 else 0
                 
                 # Get average time on page
-                cursor.execute("""
-                    SELECT AVG(CAST(JSON_EXTRACT(metadata, '$.time_spent') AS REAL))
-                    FROM engagement_events 
-                    WHERE event_type = 'time_on_page' AND metadata IS NOT NULL
-                """)
+                if self.db_type == 'mssql':
+                    cursor.execute("""
+                        SELECT AVG(CAST(JSON_VALUE(metadata, '$.time_spent') AS FLOAT))
+                        FROM engagement_events 
+                        WHERE event_type = 'time_on_page' AND metadata IS NOT NULL
+                    """)
+                else:
+                    cursor.execute("""
+                        SELECT AVG(CAST(JSON_EXTRACT(metadata, '$.time_spent') AS REAL))
+                        FROM engagement_events 
+                        WHERE event_type = 'time_on_page' AND metadata IS NOT NULL
+                    """)
                 avg_time_result = cursor.fetchone()
                 avg_time_on_page = avg_time_result[0] if avg_time_result[0] else 0
                 
