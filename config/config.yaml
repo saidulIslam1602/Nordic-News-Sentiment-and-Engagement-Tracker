@@ -1,0 +1,153 @@
+# Nordic News Sentiment & Engagement Tracker Configuration
+
+# Database Configuration
+database:
+  development:
+    type: sqlite
+    path: "data/nordic_news.db"
+  production:
+    type: postgresql
+    host: "localhost"
+    port: 5432
+    database: "nordic_news"
+    username: "analyst"
+    password: "${DB_PASSWORD}"
+
+# News Sources Configuration
+news_sources:
+  norwegian:
+    - name: "VG"
+      url: "https://www.vg.no/rss"
+      language: "no"
+      country: "Norway"
+    - name: "Aftenposten"
+      url: "https://www.aftenposten.no/rss"
+      language: "no"
+      country: "Norway"
+    - name: "Bergens Tidende"
+      url: "https://www.bt.no/rss"
+      language: "no"
+      country: "Norway"
+  
+  swedish:
+    - name: "Aftonbladet"
+      url: "https://www.aftonbladet.se/rss"
+      language: "sv"
+      country: "Sweden"
+    - name: "Svenska Dagbladet"
+      url: "https://www.svd.se/rss"
+      language: "sv"
+      country: "Sweden"
+    - name: "Omni"
+      url: "https://omni.se/rss"
+      language: "sv"
+      country: "Sweden"
+  
+  danish:
+    - name: "Politiken"
+      url: "https://politiken.dk/rss"
+      language: "da"
+      country: "Denmark"
+    - name: "Berlingske"
+      url: "https://berlingske.dk/rss"
+      language: "da"
+      country: "Denmark"
+  
+  finnish:
+    - name: "Helsingin Sanomat"
+      url: "https://www.hs.fi/rss"
+      language: "fi"
+      country: "Finland"
+    - name: "Yle"
+      url: "https://yle.fi/rss"
+      language: "fi"
+      country: "Finland"
+
+# Sentiment Analysis Configuration
+sentiment_analysis:
+  models:
+    primary: "vader"
+    fallback: "textblob"
+    advanced: "transformers"
+  
+  languages:
+    supported: ["no", "sv", "da", "fi", "en"]
+    default: "en"
+  
+  thresholds:
+    positive: 0.05
+    negative: -0.05
+    neutral: 0.0
+
+# Engagement Metrics Configuration
+engagement_metrics:
+  primary_metrics:
+    - "click_through_rate"
+    - "time_on_page"
+    - "bounce_rate"
+    - "social_shares"
+    - "comments_count"
+  
+  secondary_metrics:
+    - "scroll_depth"
+    - "video_completion_rate"
+    - "newsletter_signups"
+    - "subscription_conversions"
+
+# A/B Testing Configuration
+ab_testing:
+  default_traffic_split: 0.5
+  minimum_sample_size: 1000
+  significance_level: 0.05
+  test_duration_days: 14
+  
+  experiment_types:
+    - "headline_variations"
+    - "image_placement"
+    - "content_layout"
+    - "personalization_algorithm"
+
+# GDPR Compliance Configuration
+gdpr:
+  data_retention_days: 365
+  anonymization_required: true
+  consent_required: true
+  
+  data_categories:
+    - "personal_data"
+    - "behavioral_data"
+    - "engagement_metrics"
+    - "content_preferences"
+
+# Dashboard Configuration
+dashboard:
+  refresh_interval: 300  # seconds
+  max_data_points: 10000
+  default_time_range: "7d"
+  
+  widgets:
+    - "sentiment_trends"
+    - "engagement_metrics"
+    - "top_performing_content"
+    - "ab_test_results"
+    - "compliance_status"
+
+# API Configuration
+api:
+  rate_limit: 1000  # requests per hour
+  timeout: 30  # seconds
+  retry_attempts: 3
+  
+  endpoints:
+    news_collection: "/api/v1/news"
+    sentiment_analysis: "/api/v1/sentiment"
+    engagement_data: "/api/v1/engagement"
+    ab_test_results: "/api/v1/experiments"
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/nordic_news_tracker.log"
+  max_size: "10MB"
+  backup_count: 5
