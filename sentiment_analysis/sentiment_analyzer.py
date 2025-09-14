@@ -69,10 +69,13 @@ class NordicSentimentAnalyzer:
                     self.nlp_models[lang_code] = spacy.load(model_name)
                     logger.info(f"Loaded spaCy model for {lang_code}")
                 except OSError:
-                    logger.warning(f"spaCy model {model_name} not found for {lang_code}")
+                    logger.debug(f"spaCy model {model_name} not found for {lang_code}, using fallback")
                     # Fallback to English model
                     if lang_code != 'en':
-                        self.nlp_models[lang_code] = spacy.load('en_core_web_sm')
+                        try:
+                            self.nlp_models[lang_code] = spacy.load('en_core_web_sm')
+                        except OSError:
+                            logger.debug(f"English model also not available for {lang_code}")
             
             # Initialize transformer models for advanced sentiment analysis
             self._initialize_transformer_models()
@@ -93,7 +96,7 @@ class NordicSentimentAnalyzer:
             )
             logger.info("Loaded multilingual transformer model")
         except Exception as e:
-            logger.warning(f"Could not load transformer model: {e}")
+            logger.debug(f"Could not load transformer model: {e}")
     
     def analyze_sentiment(self, text: str, language: str = 'en', 
                          method: str = 'auto') -> Dict:

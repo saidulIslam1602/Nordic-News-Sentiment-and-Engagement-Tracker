@@ -32,28 +32,28 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Schibsted Brand Colors
-SCHIBSTED_BLUE_100 = "#020B23"  # Dark blue for text
-SCHIBSTED_BLUE_90 = "#061A57"   # Primary blue
-SCHIBSTED_BLUE_60 = "#264BC5"   # Secondary blue
-SCHIBSTED_RED_100 = "#FF716B"   # Accent red
-SCHIBSTED_WHITE = "#FFFFFF"
-SCHIBSTED_GRAY_LIGHT = "#F8F8F8"
+# Professional Analytics Platform Colors
+PRIMARY_BLUE = "#020B23"       # Dark blue for text
+SECONDARY_BLUE = "#061A57"     # Primary blue
+ACCENT_BLUE = "#264BC5"        # Secondary blue
+WARNING_RED = "#FF716B"        # Accent red
+WHITE = "#FFFFFF"
+LIGHT_GRAY = "#F8F8F8"
 
-# Custom CSS with Schibsted branding
+# Custom CSS with professional analytics branding
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
     /* Global styles */
     .main {{
-        font-family: 'Inter', 'Schibsted Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }}
     
     /* Header styling */
     .main-header {{
         font-size: 2.5rem;
-        color: {SCHIBSTED_BLUE_100};
+        color: {PRIMARY_BLUE};
         text-align: center;
         margin-bottom: 2rem;
         font-weight: 600;
@@ -62,7 +62,7 @@ st.markdown(f"""
     
     .sub-header {{
         font-size: 1.5rem;
-        color: {SCHIBSTED_BLUE_90};
+        color: {SECONDARY_BLUE};
         font-weight: 500;
         margin-bottom: 1rem;
     }}
@@ -74,7 +74,7 @@ st.markdown(f"""
         justify-content: center;
         margin-bottom: 2rem;
         padding: 1rem;
-        background: linear-gradient(135deg, {SCHIBSTED_BLUE_90} 0%, {SCHIBSTED_BLUE_60} 100%);
+        background: linear-gradient(135deg, {SECONDARY_BLUE} 0%, {ACCENT_BLUE} 100%);
         border-radius: 12px;
         color: white;
     }}
@@ -88,10 +88,10 @@ st.markdown(f"""
     
     /* Metric cards with Schibsted styling */
     .metric-card {{
-        background-color: {SCHIBSTED_WHITE};
+        background-color: {WHITE};
         padding: 1.5rem;
         border-radius: 12px;
-        border-left: 4px solid {SCHIBSTED_BLUE_60};
+        border-left: 4px solid {ACCENT_BLUE};
         box-shadow: 0 2px 8px rgba(6, 26, 87, 0.1);
         margin-bottom: 1rem;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -108,7 +108,7 @@ st.markdown(f"""
         font-weight: 600;
     }}
     .sentiment-negative {{
-        color: {SCHIBSTED_RED_100};
+        color: {WARNING_RED};
         font-weight: 600;
     }}
     .sentiment-neutral {{
@@ -118,7 +118,7 @@ st.markdown(f"""
     
     /* Button styling */
     .stButton > button {{
-        background-color: {SCHIBSTED_BLUE_60};
+        background-color: {ACCENT_BLUE};
         color: white;
         border: none;
         border-radius: 8px;
@@ -128,14 +128,14 @@ st.markdown(f"""
     }}
     
     .stButton > button:hover {{
-        background-color: {SCHIBSTED_BLUE_90};
+        background-color: {SECONDARY_BLUE};
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(38, 75, 197, 0.3);
     }}
     
     /* Sidebar styling */
     .css-1d391kg {{
-        background-color: {SCHIBSTED_GRAY_LIGHT};
+        background-color: {LIGHT_GRAY};
     }}
     
     /* Tab styling */
@@ -144,7 +144,7 @@ st.markdown(f"""
     }}
     
     .stTabs [data-baseweb="tab"] {{
-        background-color: {SCHIBSTED_WHITE};
+        background-color: {WHITE};
         border-radius: 8px;
         padding: 0.5rem 1rem;
         border: 1px solid #e0e0e0;
@@ -152,9 +152,9 @@ st.markdown(f"""
     }}
     
     .stTabs [aria-selected="true"] {{
-        background-color: {SCHIBSTED_BLUE_60};
+        background-color: {ACCENT_BLUE};
         color: white;
-        border-color: {SCHIBSTED_BLUE_60};
+        border-color: {ACCENT_BLUE};
     }}
     
     /* Data table styling */
@@ -172,7 +172,7 @@ st.markdown(f"""
     
     /* Custom metric styling */
     .metric-container {{
-        background: linear-gradient(135deg, {SCHIBSTED_WHITE} 0%, {SCHIBSTED_GRAY_LIGHT} 100%);
+        background: linear-gradient(135deg, {WHITE} 0%, {LIGHT_GRAY} 100%);
         padding: 1.5rem;
         border-radius: 12px;
         border: 1px solid #e0e0e0;
@@ -188,13 +188,13 @@ st.markdown(f"""
     .metric-value {{
         font-size: 2rem;
         font-weight: 700;
-        color: {SCHIBSTED_BLUE_100};
+        color: {PRIMARY_BLUE};
         margin-bottom: 0.5rem;
     }}
     
     .metric-label {{
         font-size: 0.9rem;
-        color: {SCHIBSTED_BLUE_90};
+        color: {SECONDARY_BLUE};
         font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.05em;
@@ -211,14 +211,14 @@ st.markdown(f"""
     }}
     
     .metric-delta.negative {{
-        color: {SCHIBSTED_RED_100};
+        color: {WARNING_RED};
     }}
     
     /* Nordic pattern background */
     .nordic-pattern {{
         background-image: 
-            radial-gradient(circle at 25% 25%, {SCHIBSTED_BLUE_60} 2px, transparent 2px),
-            radial-gradient(circle at 75% 75%, {SCHIBSTED_BLUE_60} 2px, transparent 2px);
+            radial-gradient(circle at 25% 25%, {ACCENT_BLUE} 2px, transparent 2px),
+            radial-gradient(circle at 75% 75%, {ACCENT_BLUE} 2px, transparent 2px);
         background-size: 20px 20px;
         background-position: 0 0, 10px 10px;
         opacity: 0.1;
@@ -309,11 +309,11 @@ def get_sample_metrics():
 
 def main():
     """Main dashboard function."""
-    # Schibsted Logo and Header
+    # Analytics Platform Logo and Header
     st.markdown("""
     <div class="logo-container">
-        <div style="font-size: 2.5rem; font-weight: 700;">S</div>
-        <div class="logo-text">Schibsted Media Analytics</div>
+        <div style="font-size: 2.5rem; font-weight: 700;">N</div>
+        <div class="logo-text">Nordic Analytics Platform</div>
     </div>
     """, unsafe_allow_html=True)
     
@@ -321,17 +321,17 @@ def main():
     st.markdown('<h1 class="main-header">📊 Nordic News Sentiment & Engagement Tracker</h1>', 
                 unsafe_allow_html=True)
     
-    # Subtitle with Nordic branding
+    # Subtitle with platform branding
     st.markdown("""
     <div style="text-align: center; color: #6c757d; margin-bottom: 2rem; font-size: 1.1rem;">
-        Empowering data-driven journalism across the Nordic region
+        Advanced sentiment analysis and engagement tracking for Nordic media
     </div>
     """, unsafe_allow_html=True)
     
     # Initialize components
     components = initialize_components()
     
-    # Sidebar with Schibsted styling
+    # Sidebar with platform styling
     st.sidebar.markdown("""
     <div style="background: linear-gradient(135deg, #061A57 0%, #264BC5 100%); 
                 padding: 1rem; border-radius: 8px; margin-bottom: 1rem; color: white;">
@@ -492,7 +492,7 @@ def show_overview_tab(components, start_date, end_date, languages, sources, data
         
         if data_source == "Real-time" and real_data:
             # Use real engagement trends data
-            db_manager = components['database']
+            db_manager = components['db_manager']
             engagement_trends = db_manager.get_engagement_trends(days=7)
             
             if engagement_trends:
@@ -508,7 +508,7 @@ def show_overview_tab(components, start_date, end_date, languages, sources, data
                 if not engagement_df.empty:
                     fig = px.line(engagement_df, x='Date', y='Engagement Rate', 
                                  title="Daily Engagement Rate (Real Data)",
-                                 color_discrete_sequence=[SCHIBSTED_BLUE_60])
+                                 color_discrete_sequence=[ACCENT_BLUE])
                 else:
                     # Fallback to sample data if no real data
                     dates = pd.date_range(start=start_date, end=end_date, freq='D')
@@ -524,7 +524,7 @@ def show_overview_tab(components, start_date, end_date, languages, sources, data
                     })
                     fig = px.line(engagement_df, x='Date', y='Engagement Rate', 
                                  title="Daily Engagement Rate (Sample Data)",
-                                 color_discrete_sequence=[SCHIBSTED_BLUE_60])
+                                 color_discrete_sequence=[ACCENT_BLUE])
             else:
                 # Fallback to sample data
                 dates = pd.date_range(start=start_date, end=end_date, freq='D')
@@ -540,7 +540,7 @@ def show_overview_tab(components, start_date, end_date, languages, sources, data
                 })
                 fig = px.line(engagement_df, x='Date', y='Engagement Rate', 
                              title="Daily Engagement Rate (Sample Data)",
-                             color_discrete_sequence=[SCHIBSTED_BLUE_60])
+                             color_discrete_sequence=[ACCENT_BLUE])
         else:
             # Sample data for demonstration
             dates = pd.date_range(start=start_date, end=end_date, freq='D')
@@ -556,16 +556,36 @@ def show_overview_tab(components, start_date, end_date, languages, sources, data
             })
             fig = px.line(engagement_df, x='Date', y='Engagement Rate', 
                          title="Daily Engagement Rate (Sample Data)",
-                         color_discrete_sequence=[SCHIBSTED_BLUE_60])
+                         color_discrete_sequence=[ACCENT_BLUE])
         
         fig.update_layout(
             height=400,
             plot_bgcolor='white',
             paper_bgcolor='white',
-            font=dict(family="Inter, sans-serif"),
-            title_font=dict(color=SCHIBSTED_BLUE_100, size=16),
-            xaxis_title_font=dict(color=SCHIBSTED_BLUE_90),
-            yaxis_title_font=dict(color=SCHIBSTED_BLUE_90)
+            font=dict(family="Inter, sans-serif", size=12),
+            title_font=dict(color=PRIMARY_BLUE, size=16),
+            xaxis=dict(
+                title="Date",
+                title_font=dict(color=SECONDARY_BLUE, size=14),
+                tickfont=dict(color=PRIMARY_BLUE, size=11),
+                showgrid=True,
+                gridcolor='#E5E5E5',
+                showline=True,
+                linecolor=SECONDARY_BLUE,
+                tickangle=45,
+                dtick="D1"
+            ),
+            yaxis=dict(
+                title="Engagement Rate (%)",
+                title_font=dict(color=SECONDARY_BLUE, size=14),
+                tickfont=dict(color=PRIMARY_BLUE, size=11),
+                showgrid=True,
+                gridcolor='#E5E5E5',
+                showline=True,
+                linecolor=SECONDARY_BLUE,
+                tickformat='.1f'
+            ),
+            margin=dict(l=60, r=30, t=60, b=60)
         )
         st.plotly_chart(fig, use_container_width=True)
     
@@ -600,7 +620,7 @@ def show_overview_tab(components, start_date, end_date, languages, sources, data
                     ])
                     fig = px.pie(geo_data, values='Articles', names='Country', 
                                 title="Article Distribution by Country (Real Data)",
-                                color_discrete_sequence=[SCHIBSTED_BLUE_60, SCHIBSTED_BLUE_90, SCHIBSTED_RED_100, '#28a745'])
+                                color_discrete_sequence=[ACCENT_BLUE, SECONDARY_BLUE, WARNING_RED, '#28a745'])
                 else:
                     # Fallback to sample data
                     geo_data = pd.DataFrame({
@@ -609,7 +629,7 @@ def show_overview_tab(components, start_date, end_date, languages, sources, data
                     })
                     fig = px.pie(geo_data, values='Articles', names='Country', 
                                 title="Article Distribution by Country (Sample Data)",
-                                color_discrete_sequence=[SCHIBSTED_BLUE_60, SCHIBSTED_BLUE_90, SCHIBSTED_RED_100, '#28a745'])
+                                color_discrete_sequence=[ACCENT_BLUE, SECONDARY_BLUE, WARNING_RED, '#28a745'])
             else:
                 # Fallback to sample data
                 geo_data = pd.DataFrame({
@@ -618,7 +638,7 @@ def show_overview_tab(components, start_date, end_date, languages, sources, data
                 })
                 fig = px.pie(geo_data, values='Articles', names='Country', 
                             title="Article Distribution by Country (Sample Data)",
-                            color_discrete_sequence=[SCHIBSTED_BLUE_60, SCHIBSTED_BLUE_90, SCHIBSTED_RED_100, '#28a745'])
+                            color_discrete_sequence=[ACCENT_BLUE, SECONDARY_BLUE, WARNING_RED, '#28a745'])
         else:
             # Sample data for demonstration
             geo_data = pd.DataFrame({
@@ -627,14 +647,29 @@ def show_overview_tab(components, start_date, end_date, languages, sources, data
             })
             fig = px.pie(geo_data, values='Articles', names='Country', 
                         title="Article Distribution by Country (Sample Data)",
-                        color_discrete_sequence=[SCHIBSTED_BLUE_60, SCHIBSTED_BLUE_90, SCHIBSTED_RED_100, '#28a745'])
+                        color_discrete_sequence=[ACCENT_BLUE, SECONDARY_BLUE, WARNING_RED, '#28a745'])
         
         fig.update_layout(
             height=400,
             plot_bgcolor='white',
             paper_bgcolor='white',
-            font=dict(family="Inter, sans-serif"),
-            title_font=dict(color=SCHIBSTED_BLUE_100, size=16)
+            font=dict(family="Inter, sans-serif", size=12),
+            title_font=dict(color=PRIMARY_BLUE, size=16),
+            legend=dict(
+                font=dict(size=12, color=PRIMARY_BLUE),
+                orientation="v",
+                yanchor="middle",
+                y=0.5,
+                xanchor="left",
+                x=1.01
+            ),
+            margin=dict(l=20, r=100, t=60, b=20)
+        )
+        fig.update_traces(
+            textposition='inside',
+            textinfo='percent+label',
+            textfont=dict(size=11, color='white'),
+            hovertemplate='<b>%{label}</b><br>Articles: %{value}<br>Percentage: %{percent}<extra></extra>'
         )
         st.plotly_chart(fig, use_container_width=True)
     
@@ -652,7 +687,7 @@ def show_overview_tab(components, start_date, end_date, languages, sources, data
                     'Article Title': article.get('title', 'No title')[:60] + '...' if len(article.get('title', '')) > 60 else article.get('title', 'No title'),
                     'Source': article.get('source', 'Unknown'),
                     'Published': article.get('published_at', 'Unknown')[:10] if article.get('published_at') else 'Unknown',
-                    'Sentiment Score': f"{article.get('sentiment_score', 0):.2f}" if article.get('sentiment_score') else 'N/A'
+                    'Sentiment Score': f"{float(article.get('sentiment_score', 0)):.2f}" if article.get('sentiment_score') and str(article.get('sentiment_score')).replace('.', '').replace('-', '').isdigit() else 'N/A'
                 })
             
             if top_content_data:
@@ -753,7 +788,7 @@ def show_sentiment_tab(components, start_date, end_date, languages, sources, dat
     
     if data_source == "Real-time":
         # Use real sentiment trends data
-        db_manager = components['database']
+        db_manager = components['db_manager']
         sentiment_trends = db_manager.get_sentiment_trends(days=7)
         
         if sentiment_trends:
@@ -775,7 +810,7 @@ def show_sentiment_tab(components, start_date, end_date, languages, sources, dat
                 fig.add_trace(go.Scatter(x=sentiment_df['Date'], y=sentiment_df['Neutral'], 
                                        name='Neutral', fill='tonexty', line_color='#6c757d'))
                 fig.add_trace(go.Scatter(x=sentiment_df['Date'], y=sentiment_df['Negative'], 
-                                       name='Negative', fill='tonexty', line_color=SCHIBSTED_RED_100))
+                                       name='Negative', fill='tonexty', line_color=WARNING_RED))
                 fig.update_layout(
                     title="Sentiment Trends Over Time (Real Data)",
                     xaxis_title="Date",
@@ -784,9 +819,9 @@ def show_sentiment_tab(components, start_date, end_date, languages, sources, dat
                     plot_bgcolor='white',
                     paper_bgcolor='white',
                     font=dict(family="Inter, sans-serif"),
-                    title_font=dict(color=SCHIBSTED_BLUE_100, size=16),
-                    xaxis_title_font=dict(color=SCHIBSTED_BLUE_90),
-                    yaxis_title_font=dict(color=SCHIBSTED_BLUE_90)
+                    title_font=dict(color=PRIMARY_BLUE, size=16),
+                    xaxis_title_font=dict(color=SECONDARY_BLUE),
+                    yaxis_title_font=dict(color=SECONDARY_BLUE)
                 )
                 st.plotly_chart(fig, use_container_width=True)
             else:
@@ -818,7 +853,7 @@ def show_sentiment_tab(components, start_date, end_date, languages, sources, dat
                 fig.add_trace(go.Scatter(x=sentiment_df['Date'], y=sentiment_df['Neutral'], 
                                        name='Neutral', fill='tonexty', line_color='#6c757d'))
                 fig.add_trace(go.Scatter(x=sentiment_df['Date'], y=sentiment_df['Negative'], 
-                                       name='Negative', fill='tonexty', line_color=SCHIBSTED_RED_100))
+                                       name='Negative', fill='tonexty', line_color=WARNING_RED))
                 fig.update_layout(
                     title="Sentiment Trends Over Time (Sample Data)",
                     xaxis_title="Date",
@@ -827,9 +862,9 @@ def show_sentiment_tab(components, start_date, end_date, languages, sources, dat
                     plot_bgcolor='white',
                     paper_bgcolor='white',
                     font=dict(family="Inter, sans-serif"),
-                    title_font=dict(color=SCHIBSTED_BLUE_100, size=16),
-                    xaxis_title_font=dict(color=SCHIBSTED_BLUE_90),
-                    yaxis_title_font=dict(color=SCHIBSTED_BLUE_90)
+                    title_font=dict(color=PRIMARY_BLUE, size=16),
+                    xaxis_title_font=dict(color=SECONDARY_BLUE),
+                    yaxis_title_font=dict(color=SECONDARY_BLUE)
                 )
                 st.plotly_chart(fig, use_container_width=True)
         else:
@@ -861,7 +896,7 @@ def show_sentiment_tab(components, start_date, end_date, languages, sources, dat
             fig.add_trace(go.Scatter(x=sentiment_df['Date'], y=sentiment_df['Neutral'], 
                                    name='Neutral', fill='tonexty', line_color='#6c757d'))
             fig.add_trace(go.Scatter(x=sentiment_df['Date'], y=sentiment_df['Negative'], 
-                                   name='Negative', fill='tonexty', line_color=SCHIBSTED_RED_100))
+                                   name='Negative', fill='tonexty', line_color=WARNING_RED))
             fig.update_layout(
                 title="Sentiment Trends Over Time (Sample Data)",
                 xaxis_title="Date",
@@ -870,9 +905,9 @@ def show_sentiment_tab(components, start_date, end_date, languages, sources, dat
                 plot_bgcolor='white',
                 paper_bgcolor='white',
                 font=dict(family="Inter, sans-serif"),
-                title_font=dict(color=SCHIBSTED_BLUE_100, size=16),
-                xaxis_title_font=dict(color=SCHIBSTED_BLUE_90),
-                yaxis_title_font=dict(color=SCHIBSTED_BLUE_90)
+                title_font=dict(color=PRIMARY_BLUE, size=16),
+                xaxis_title_font=dict(color=SECONDARY_BLUE),
+                yaxis_title_font=dict(color=SECONDARY_BLUE)
             )
             st.plotly_chart(fig, use_container_width=True)
     else:
@@ -904,18 +939,45 @@ def show_sentiment_tab(components, start_date, end_date, languages, sources, dat
         fig.add_trace(go.Scatter(x=sentiment_df['Date'], y=sentiment_df['Neutral'], 
                                name='Neutral', fill='tonexty', line_color='#6c757d'))
         fig.add_trace(go.Scatter(x=sentiment_df['Date'], y=sentiment_df['Negative'], 
-                               name='Negative', fill='tonexty', line_color=SCHIBSTED_RED_100))
+                               name='Negative', fill='tonexty', line_color=WARNING_RED))
         fig.update_layout(
             title="Sentiment Trends Over Time (Sample Data)",
-            xaxis_title="Date",
-            yaxis_title="Percentage",
             height=400,
             plot_bgcolor='white',
             paper_bgcolor='white',
-            font=dict(family="Inter, sans-serif"),
-            title_font=dict(color=SCHIBSTED_BLUE_100, size=16),
-            xaxis_title_font=dict(color=SCHIBSTED_BLUE_90),
-            yaxis_title_font=dict(color=SCHIBSTED_BLUE_90)
+            font=dict(family="Inter, sans-serif", size=12),
+            title_font=dict(color=PRIMARY_BLUE, size=16),
+            xaxis=dict(
+                title="Date",
+                title_font=dict(color=SECONDARY_BLUE, size=14),
+                tickfont=dict(color=PRIMARY_BLUE, size=11),
+                showgrid=True,
+                gridcolor='#E5E5E5',
+                showline=True,
+                linecolor=SECONDARY_BLUE,
+                tickangle=45,
+                dtick="D1"
+            ),
+            yaxis=dict(
+                title="Percentage (%)",
+                title_font=dict(color=SECONDARY_BLUE, size=14),
+                tickfont=dict(color=PRIMARY_BLUE, size=11),
+                showgrid=True,
+                gridcolor='#E5E5E5',
+                showline=True,
+                linecolor=SECONDARY_BLUE,
+                tickformat='.0f',
+                range=[0, 100]
+            ),
+            legend=dict(
+                font=dict(size=11, color=PRIMARY_BLUE),
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1
+            ),
+            margin=dict(l=60, r=30, t=80, b=60)
         )
         st.plotly_chart(fig, use_container_width=True)
     
@@ -932,15 +994,42 @@ def show_sentiment_tab(components, start_date, end_date, languages, sources, dat
     
     fig = px.bar(source_sentiment, x='Source', y=['Positive', 'Neutral', 'Negative'],
                 title="Sentiment Distribution by Source",
-                color_discrete_map={'Positive': '#28a745', 'Neutral': '#6c757d', 'Negative': SCHIBSTED_RED_100})
+                color_discrete_map={'Positive': '#28a745', 'Neutral': '#6c757d', 'Negative': WARNING_RED})
     fig.update_layout(
         height=400,
         plot_bgcolor='white',
         paper_bgcolor='white',
-        font=dict(family="Inter, sans-serif"),
-        title_font=dict(color=SCHIBSTED_BLUE_100, size=16),
-        xaxis_title_font=dict(color=SCHIBSTED_BLUE_90),
-        yaxis_title_font=dict(color=SCHIBSTED_BLUE_90)
+        font=dict(family="Inter, sans-serif", size=12),
+        title_font=dict(color=PRIMARY_BLUE, size=16),
+        xaxis=dict(
+            title="News Source",
+            title_font=dict(color=SECONDARY_BLUE, size=14),
+            tickfont=dict(color=PRIMARY_BLUE, size=11),
+            showgrid=True,
+            gridcolor='#E5E5E5',
+            showline=True,
+            linecolor=SECONDARY_BLUE
+        ),
+        yaxis=dict(
+            title="Percentage (%)",
+            title_font=dict(color=SECONDARY_BLUE, size=14),
+            tickfont=dict(color=PRIMARY_BLUE, size=11),
+            showgrid=True,
+            gridcolor='#E5E5E5',
+            showline=True,
+            linecolor=SECONDARY_BLUE,
+            tickformat='.0f',
+            range=[0, 100]
+        ),
+        legend=dict(
+            font=dict(size=11, color=PRIMARY_BLUE),
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+        margin=dict(l=60, r=30, t=80, b=60)
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -1009,15 +1098,35 @@ def show_engagement_tab(components, start_date, end_date, languages, sources, da
         
         fig = px.line(ctr_data, x='Date', y='CTR', 
                      title="Click-Through Rate Over Time",
-                     color_discrete_sequence=[SCHIBSTED_BLUE_60])
+                     color_discrete_sequence=[ACCENT_BLUE])
         fig.update_layout(
             height=400,
             plot_bgcolor='white',
             paper_bgcolor='white',
-            font=dict(family="Inter, sans-serif"),
-            title_font=dict(color=SCHIBSTED_BLUE_100, size=16),
-            xaxis_title_font=dict(color=SCHIBSTED_BLUE_90),
-            yaxis_title_font=dict(color=SCHIBSTED_BLUE_90)
+            font=dict(family="Inter, sans-serif", size=12),
+            title_font=dict(color=PRIMARY_BLUE, size=16),
+            xaxis=dict(
+                title="Date",
+                title_font=dict(color=SECONDARY_BLUE, size=14),
+                tickfont=dict(color=PRIMARY_BLUE, size=11),
+                showgrid=True,
+                gridcolor='#E5E5E5',
+                showline=True,
+                linecolor=SECONDARY_BLUE,
+                tickangle=45,
+                dtick="D1"
+            ),
+            yaxis=dict(
+                title="CTR (%)",
+                title_font=dict(color=SECONDARY_BLUE, size=14),
+                tickfont=dict(color=PRIMARY_BLUE, size=11),
+                showgrid=True,
+                gridcolor='#E5E5E5',
+                showline=True,
+                linecolor=SECONDARY_BLUE,
+                tickformat='.1f'
+            ),
+            margin=dict(l=60, r=30, t=60, b=60)
         )
         st.plotly_chart(fig, use_container_width=True)
     
@@ -1030,15 +1139,34 @@ def show_engagement_tab(components, start_date, end_date, languages, sources, da
         
         fig = px.bar(time_data, x='Time Range', y='Percentage',
                     title="Time on Page Distribution",
-                    color_discrete_sequence=[SCHIBSTED_BLUE_60])
+                    color_discrete_sequence=[ACCENT_BLUE])
         fig.update_layout(
             height=400,
             plot_bgcolor='white',
             paper_bgcolor='white',
-            font=dict(family="Inter, sans-serif"),
-            title_font=dict(color=SCHIBSTED_BLUE_100, size=16),
-            xaxis_title_font=dict(color=SCHIBSTED_BLUE_90),
-            yaxis_title_font=dict(color=SCHIBSTED_BLUE_90)
+            font=dict(family="Inter, sans-serif", size=12),
+            title_font=dict(color=PRIMARY_BLUE, size=16),
+            xaxis=dict(
+                title="Time Range",
+                title_font=dict(color=SECONDARY_BLUE, size=14),
+                tickfont=dict(color=PRIMARY_BLUE, size=11),
+                showgrid=True,
+                gridcolor='#E5E5E5',
+                showline=True,
+                linecolor=SECONDARY_BLUE
+            ),
+            yaxis=dict(
+                title="Percentage (%)",
+                title_font=dict(color=SECONDARY_BLUE, size=14),
+                tickfont=dict(color=PRIMARY_BLUE, size=11),
+                showgrid=True,
+                gridcolor='#E5E5E5',
+                showline=True,
+                linecolor=SECONDARY_BLUE,
+                tickformat='.0f',
+                range=[0, 35]
+            ),
+            margin=dict(l=60, r=30, t=60, b=60)
         )
         st.plotly_chart(fig, use_container_width=True)
     
@@ -1100,15 +1228,15 @@ def show_ab_testing_tab(components, start_date, end_date):
         
         fig = px.bar(ctr_comparison, x='Variant', y='CTR',
                     title="CTR Comparison by Variant",
-                    color_discrete_sequence=[SCHIBSTED_BLUE_60, SCHIBSTED_BLUE_90])
+                    color_discrete_sequence=[ACCENT_BLUE, SECONDARY_BLUE])
         fig.update_layout(
             height=400,
             plot_bgcolor='white',
             paper_bgcolor='white',
             font=dict(family="Inter, sans-serif"),
-            title_font=dict(color=SCHIBSTED_BLUE_100, size=16),
-            xaxis_title_font=dict(color=SCHIBSTED_BLUE_90),
-            yaxis_title_font=dict(color=SCHIBSTED_BLUE_90)
+            title_font=dict(color=PRIMARY_BLUE, size=16),
+            xaxis_title_font=dict(color=SECONDARY_BLUE),
+            yaxis_title_font=dict(color=SECONDARY_BLUE)
         )
         st.plotly_chart(fig, use_container_width=True)
     
@@ -1123,15 +1251,15 @@ def show_ab_testing_tab(components, start_date, end_date):
         fig = px.bar(significance_data, x='Metric', y='P-Value',
                     color='Significant',
                     title="Statistical Significance by Metric",
-                    color_discrete_map={True: SCHIBSTED_BLUE_60, False: SCHIBSTED_RED_100})
+                    color_discrete_map={True: ACCENT_BLUE, False: WARNING_RED})
         fig.update_layout(
             height=400,
             plot_bgcolor='white',
             paper_bgcolor='white',
             font=dict(family="Inter, sans-serif"),
-            title_font=dict(color=SCHIBSTED_BLUE_100, size=16),
-            xaxis_title_font=dict(color=SCHIBSTED_BLUE_90),
-            yaxis_title_font=dict(color=SCHIBSTED_BLUE_90)
+            title_font=dict(color=PRIMARY_BLUE, size=16),
+            xaxis_title_font=dict(color=SECONDARY_BLUE),
+            yaxis_title_font=dict(color=SECONDARY_BLUE)
         )
         st.plotly_chart(fig, use_container_width=True)
 

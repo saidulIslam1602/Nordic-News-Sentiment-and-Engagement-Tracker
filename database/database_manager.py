@@ -2,10 +2,10 @@
 Database Manager
 
 Handles database operations for the Nordic News Sentiment & Engagement Tracker.
-Supports both SQLite (development) and PostgreSQL (production).
+Supports Microsoft SQL Server (MSSQL) for both development and production.
 """
 
-import sqlite3
+import pyodbc
 import logging
 import json
 from datetime import datetime, timedelta
@@ -22,7 +22,7 @@ class DatabaseManager:
     Manages database operations for the Nordic News Analytics platform.
     
     Features:
-    - SQLite for development, PostgreSQL for production
+    - Microsoft SQL Server (MSSQL) for development and production
     - Article storage and retrieval
     - Sentiment analysis data storage
     - Engagement metrics tracking
@@ -32,11 +32,14 @@ class DatabaseManager:
     def __init__(self, config_path: str = "config/config.yaml"):
         """Initialize the database manager."""
         self.config = self._load_config(config_path)
-        self.db_type = self.config.get('database', {}).get('development', {}).get('type', 'sqlite')
-        self.db_path = self.config.get('database', {}).get('development', {}).get('path', 'data/nordic_news.db')
-        
-        # Create database directory if it doesn't exist
-        os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
+        self.db_config = self.config.get('database', {}).get('development', {})
+        self.db_type = self.db_config.get('type', 'mssql')
+        self.server = self.db_config.get('server', 'localhost')
+        self.port = self.db_config.get('port', 1433)
+        self.database = self.db_config.get('database', 'nordic_news_dev')
+        self.username = self.db_config.get('username', 'sa')
+        self.password = os.getenv('MSSQL_PASSWORD', self.db_config.get('password', ''))
+        self.driver = self.db_config.get('driver', 'ODBC Driver 17 for SQL Server')
         
         # Initialize database
         self._initialize_database()
@@ -58,115 +61,127 @@ class DatabaseManager:
                 
                 # Create articles table
                 cursor.execute("""
-                    CREATE TABLE IF NOT EXISTS articles (
-                        id TEXT PRIMARY KEY,
-                        title TEXT NOT NULL,
-                        url TEXT UNIQUE,
-                        summary TEXT,
-                        content TEXT,
-                        published_date TEXT,
-                        source_name TEXT,
-                        source_country TEXT,
-                        source_language TEXT,
-                        author TEXT,
-                        tags TEXT,
-                        word_count INTEGER,
-                        collected_at TEXT,
-                        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='articles' AND xtype='U')
+                    CREATE TABLE articles (
+                        id NVARCHAR(255) PRIMARY KEY,
+                        title NVARCHAR(MAX) NOT NULL,
+                        url NVARCHAR(1000),
+                        summary NVARCHAR(MAX),
+                        content NVARCHAR(MAX),
+                        published_date DATETIME2,
+                        source_name NVARCHAR(255),
+                        source_country NVARCHAR(100),
+                        source_language NVARCHAR(10),
+                        author NVARCHAR(255),
+                        tags NVARCHAR(MAX),
+                        word_count INT,
+                        collected_at DATETIME2,
+                        created_at DATETIME2 DEFAULT GETDATE()
                     )
+                """)
+                
+                # Create unique index for URL separately
+                cursor.execute("""
+                    IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'idx_articles_url_unique')
+                    CREATE UNIQUE INDEX idx_articles_url_unique ON articles (url) WHERE url IS NOT NULL
                 """)
                 
                 # Create sentiment_analysis table
                 cursor.execute("""
-                    CREATE TABLE IF NOT EXISTS sentiment_analysis (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        article_id TEXT,
-                        sentiment_label TEXT,
-                        compound_score REAL,
-                        positive_score REAL,
-                        negative_score REAL,
-                        neutral_score REAL,
-                        confidence REAL,
-                        method TEXT,
-                        language TEXT,
-                        analyzed_at TEXT,
-                        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='sentiment_analysis' AND xtype='U')
+                    CREATE TABLE sentiment_analysis (
+                        id INT IDENTITY(1,1) PRIMARY KEY,
+                        article_id NVARCHAR(255),
+                        sentiment_label NVARCHAR(50),
+                        compound_score FLOAT,
+                        positive_score FLOAT,
+                        negative_score FLOAT,
+                        neutral_score FLOAT,
+                        confidence FLOAT,
+                        method NVARCHAR(100),
+                        language NVARCHAR(10),
+                        analyzed_at DATETIME2,
+                        created_at DATETIME2 DEFAULT GETDATE(),
                         FOREIGN KEY (article_id) REFERENCES articles (id)
                     )
                 """)
                 
                 # Create engagement_events table
                 cursor.execute("""
-                    CREATE TABLE IF NOT EXISTS engagement_events (
-                        id TEXT PRIMARY KEY,
-                        user_id TEXT,
-                        article_id TEXT,
-                        event_type TEXT,
-                        timestamp TEXT,
-                        session_id TEXT,
-                        country TEXT,
-                        device_type TEXT,
-                        metadata TEXT,
-                        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='engagement_events' AND xtype='U')
+                    CREATE TABLE engagement_events (
+                        id NVARCHAR(255) PRIMARY KEY,
+                        user_id NVARCHAR(255),
+                        article_id NVARCHAR(255),
+                        event_type NVARCHAR(100),
+                        timestamp DATETIME2,
+                        session_id NVARCHAR(255),
+                        country NVARCHAR(100),
+                        device_type NVARCHAR(50),
+                        metadata NVARCHAR(MAX),
+                        created_at DATETIME2 DEFAULT GETDATE(),
                         FOREIGN KEY (article_id) REFERENCES articles (id)
                     )
                 """)
                 
                 # Create article_metrics table
                 cursor.execute("""
-                    CREATE TABLE IF NOT EXISTS article_metrics (
-                        article_id TEXT PRIMARY KEY,
-                        total_views INTEGER DEFAULT 0,
-                        unique_users INTEGER DEFAULT 0,
-                        clicks INTEGER DEFAULT 0,
-                        shares INTEGER DEFAULT 0,
-                        avg_time_on_page REAL DEFAULT 0,
-                        ctr REAL DEFAULT 0,
-                        share_rate REAL DEFAULT 0,
-                        content_score REAL DEFAULT 0,
-                        last_updated TEXT,
-                        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='article_metrics' AND xtype='U')
+                    CREATE TABLE article_metrics (
+                        article_id NVARCHAR(255) PRIMARY KEY,
+                        total_views INT DEFAULT 0,
+                        unique_users INT DEFAULT 0,
+                        clicks INT DEFAULT 0,
+                        shares INT DEFAULT 0,
+                        avg_time_on_page FLOAT DEFAULT 0,
+                        ctr FLOAT DEFAULT 0,
+                        share_rate FLOAT DEFAULT 0,
+                        content_score FLOAT DEFAULT 0,
+                        last_updated DATETIME2,
+                        created_at DATETIME2 DEFAULT GETDATE(),
                         FOREIGN KEY (article_id) REFERENCES articles (id)
                     )
                 """)
                 
                 # Create ab_tests table
                 cursor.execute("""
-                    CREATE TABLE IF NOT EXISTS ab_tests (
-                        id TEXT PRIMARY KEY,
-                        name TEXT NOT NULL,
-                        description TEXT,
-                        status TEXT,
-                        traffic_split REAL,
-                        start_date TEXT,
-                        end_date TEXT,
-                        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ab_tests' AND xtype='U')
+                    CREATE TABLE ab_tests (
+                        id NVARCHAR(255) PRIMARY KEY,
+                        name NVARCHAR(255) NOT NULL,
+                        description NVARCHAR(MAX),
+                        status NVARCHAR(50),
+                        traffic_split FLOAT,
+                        start_date DATETIME2,
+                        end_date DATETIME2,
+                        created_at DATETIME2 DEFAULT GETDATE()
                     )
                 """)
                 
                 # Create ab_test_results table
                 cursor.execute("""
-                    CREATE TABLE IF NOT EXISTS ab_test_results (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        test_id TEXT,
-                        variant TEXT,
-                        metric_name TEXT,
-                        metric_value REAL,
-                        sample_size INTEGER,
-                        confidence_level REAL,
-                        p_value REAL,
-                        is_significant BOOLEAN,
-                        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ab_test_results' AND xtype='U')
+                    CREATE TABLE ab_test_results (
+                        id INT IDENTITY(1,1) PRIMARY KEY,
+                        test_id NVARCHAR(255),
+                        variant NVARCHAR(100),
+                        metric_name NVARCHAR(100),
+                        metric_value FLOAT,
+                        sample_size INT,
+                        confidence_level FLOAT,
+                        p_value FLOAT,
+                        is_significant BIT,
+                        created_at DATETIME2 DEFAULT GETDATE(),
                         FOREIGN KEY (test_id) REFERENCES ab_tests (id)
                     )
                 """)
                 
                 # Create indexes for better performance
-                cursor.execute("CREATE INDEX IF NOT EXISTS idx_articles_published_date ON articles (published_date)")
-                cursor.execute("CREATE INDEX IF NOT EXISTS idx_articles_source ON articles (source_name)")
-                cursor.execute("CREATE INDEX IF NOT EXISTS idx_sentiment_article_id ON sentiment_analysis (article_id)")
-                cursor.execute("CREATE INDEX IF NOT EXISTS idx_engagement_article_id ON engagement_events (article_id)")
-                cursor.execute("CREATE INDEX IF NOT EXISTS idx_engagement_timestamp ON engagement_events (timestamp)")
+                cursor.execute("IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'idx_articles_published_date') CREATE INDEX idx_articles_published_date ON articles (published_date)")
+                cursor.execute("IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'idx_articles_source') CREATE INDEX idx_articles_source ON articles (source_name)")
+                cursor.execute("IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'idx_sentiment_article_id') CREATE INDEX idx_sentiment_article_id ON sentiment_analysis (article_id)")
+                cursor.execute("IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'idx_engagement_article_id') CREATE INDEX idx_engagement_article_id ON engagement_events (article_id)")
+                cursor.execute("IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'idx_engagement_timestamp') CREATE INDEX idx_engagement_timestamp ON engagement_events (timestamp)")
                 
                 conn.commit()
                 logger.info("Database initialized successfully")
@@ -175,17 +190,27 @@ class DatabaseManager:
             logger.error(f"Error initializing database: {e}")
             raise
     
+    def _get_connection_string(self) -> str:
+        """Get MSSQL connection string."""
+        return (
+            f"DRIVER={{{self.driver}}};"
+            f"SERVER={self.server},{self.port};"
+            f"DATABASE={self.database};"
+            f"UID={self.username};"
+            f"PWD={self.password};"
+            "TrustServerCertificate=yes;"
+        )
+    
     @contextmanager
     def get_connection(self):
         """Get database connection with proper error handling."""
         conn = None
         try:
-            if self.db_type == 'sqlite':
-                conn = sqlite3.connect(self.db_path)
-                conn.row_factory = sqlite3.Row
+            if self.db_type == 'mssql':
+                conn = pyodbc.connect(self._get_connection_string())
+                conn.autocommit = False
             else:
-                # PostgreSQL connection would go here
-                raise NotImplementedError("PostgreSQL support not implemented yet")
+                raise NotImplementedError(f"Database type {self.db_type} not supported")
             
             yield conn
         except Exception as e:
@@ -204,11 +229,26 @@ class DatabaseManager:
                 cursor = conn.cursor()
                 
                 cursor.execute("""
-                    INSERT OR REPLACE INTO articles (
+                    MERGE articles AS target
+                    USING (VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)) AS source (
                         id, title, url, summary, content, published_date,
                         source_name, source_country, source_language, author,
                         tags, word_count, collected_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    )
+                    ON target.id = source.id
+                    WHEN MATCHED THEN
+                        UPDATE SET title = source.title, url = source.url, summary = source.summary,
+                                 content = source.content, published_date = source.published_date,
+                                 source_name = source.source_name, source_country = source.source_country,
+                                 source_language = source.source_language, author = source.author,
+                                 tags = source.tags, word_count = source.word_count, collected_at = source.collected_at
+                    WHEN NOT MATCHED THEN
+                        INSERT (id, title, url, summary, content, published_date,
+                               source_name, source_country, source_language, author,
+                               tags, word_count, collected_at)
+                        VALUES (source.id, source.title, source.url, source.summary, source.content, source.published_date,
+                               source.source_name, source.source_country, source.source_language, source.author,
+                               source.tags, source.word_count, source.collected_at);
                 """, (
                     article['id'],
                     article['title'],
@@ -301,10 +341,23 @@ class DatabaseManager:
                 cursor = conn.cursor()
                 
                 cursor.execute("""
-                    INSERT OR REPLACE INTO article_metrics (
+                    MERGE article_metrics AS target
+                    USING (VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)) AS source (
                         article_id, total_views, unique_users, clicks, shares,
                         avg_time_on_page, ctr, share_rate, content_score, last_updated
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    )
+                    ON target.article_id = source.article_id
+                    WHEN MATCHED THEN
+                        UPDATE SET total_views = source.total_views, unique_users = source.unique_users,
+                                 clicks = source.clicks, shares = source.shares,
+                                 avg_time_on_page = source.avg_time_on_page, ctr = source.ctr,
+                                 share_rate = source.share_rate, content_score = source.content_score,
+                                 last_updated = source.last_updated
+                    WHEN NOT MATCHED THEN
+                        INSERT (article_id, total_views, unique_users, clicks, shares,
+                               avg_time_on_page, ctr, share_rate, content_score, last_updated)
+                        VALUES (source.article_id, source.total_views, source.unique_users, source.clicks, source.shares,
+                               source.avg_time_on_page, source.ctr, source.share_rate, source.content_score, source.last_updated);
                 """, (
                     article_id,
                     metrics.get('total_views', 0),
@@ -408,13 +461,13 @@ class DatabaseManager:
                 
                 cursor.execute("""
                     SELECT 
-                        DATE(analyzed_at) as date,
+                        CAST(analyzed_at AS DATE) as date,
                         sentiment_label,
                         COUNT(*) as count,
                         AVG(compound_score) as avg_score
                     FROM sentiment_analysis 
-                    WHERE analyzed_at >= datetime('now', '-{} days')
-                    GROUP BY DATE(analyzed_at), sentiment_label
+                    WHERE analyzed_at >= DATEADD(day, -{}, GETDATE())
+                    GROUP BY CAST(analyzed_at AS DATE), sentiment_label
                     ORDER BY date DESC
                 """.format(days))
                 
@@ -433,12 +486,12 @@ class DatabaseManager:
                 
                 cursor.execute("""
                     SELECT 
-                        DATE(timestamp) as date,
+                        CAST(timestamp AS DATE) as date,
                         event_type,
                         COUNT(*) as count
                     FROM engagement_events 
-                    WHERE timestamp >= datetime('now', '-{} days')
-                    GROUP BY DATE(timestamp), event_type
+                    WHERE timestamp >= DATEADD(day, -{}, GETDATE())
+                    GROUP BY CAST(timestamp AS DATE), event_type
                     ORDER BY date DESC
                 """.format(days))
                 
@@ -564,21 +617,38 @@ class DatabaseManager:
                 cursor.execute("SELECT COUNT(DISTINCT user_id) FROM engagement_events")
                 total_users = cursor.fetchone()[0] or 0
                 
-                # Get average engagement rate (using available columns)
+                # Get total events in last 24 hours
                 cursor.execute("""
-                    SELECT AVG(engagement_score), AVG(time_on_page), COUNT(*)
+                    SELECT COUNT(*)
                     FROM engagement_events
-                    WHERE timestamp >= datetime('now', '-24 hours')
+                    WHERE timestamp >= DATEADD(hour, -24, GETDATE())
+                """)
+                total_events = cursor.fetchone()[0] or 0
+                
+                # Calculate engagement rate based on event types
+                cursor.execute("""
+                    SELECT 
+                        COUNT(CASE WHEN event_type = 'click' THEN 1 END) as clicks,
+                        COUNT(CASE WHEN event_type = 'view' THEN 1 END) as views,
+                        COUNT(*) as total_events
+                    FROM engagement_events
+                    WHERE timestamp >= DATEADD(hour, -24, GETDATE())
                 """)
                 result = cursor.fetchone()
-                avg_ctr = result[0] or 0
-                avg_time = result[1] or 0
+                clicks = result[0] or 0
+                views = result[1] or 0
                 total_events = result[2] or 0
+                
+                # Calculate engagement rate
+                if views > 0:
+                    engagement_rate = (clicks / views) * 100
+                else:
+                    engagement_rate = 0
                 
                 return {
                     'total_users': total_users,
-                    'avg_engagement_rate': avg_ctr * 100,  # Convert to percentage
-                    'avg_time_on_page': avg_time,
+                    'avg_engagement_rate': engagement_rate,
+                    'avg_time_on_page': 0,  # Not available in current schema
                     'total_events_24h': total_events
                 }
                 
@@ -601,7 +671,7 @@ class DatabaseManager:
                 cursor.execute("""
                     SELECT sentiment_label, COUNT(*) as count
                     FROM sentiment_analysis
-                    WHERE created_at >= datetime('now', '-24 hours')
+                    WHERE created_at >= DATEADD(hour, -24, GETDATE())
                     GROUP BY sentiment_label
                 """)
                 sentiment_counts = dict(cursor.fetchall())
@@ -610,7 +680,7 @@ class DatabaseManager:
                 cursor.execute("""
                     SELECT AVG(compound_score)
                     FROM sentiment_analysis
-                    WHERE created_at >= datetime('now', '-24 hours')
+                    WHERE created_at >= DATEADD(hour, -24, GETDATE())
                 """)
                 avg_sentiment = cursor.fetchone()[0] or 0
                 
@@ -631,13 +701,16 @@ class DatabaseManager:
     def backup_database(self, backup_path: str) -> bool:
         """Create a backup of the database."""
         try:
-            if self.db_type == 'sqlite':
-                import shutil
-                shutil.copy2(self.db_path, backup_path)
-                logger.info(f"Database backed up to {backup_path}")
-                return True
+            if self.db_type == 'mssql':
+                with self.get_connection() as conn:
+                    cursor = conn.cursor()
+                    backup_query = f"BACKUP DATABASE [{self.database}] TO DISK = '{backup_path}'"
+                    cursor.execute(backup_query)
+                    conn.commit()
+                    logger.info(f"Database backed up to {backup_path}")
+                    return True
             else:
-                logger.warning("Backup not implemented for PostgreSQL")
+                logger.warning(f"Backup not implemented for {self.db_type}")
                 return False
         except Exception as e:
             logger.error(f"Error creating backup: {e}")

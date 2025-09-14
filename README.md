@@ -31,7 +31,7 @@ This project simulates a real-world data analytics solution for Nordic news medi
 ## 🛠️ Technology Stack
 
 - **Data Processing**: Python, pandas, dbt
-- **Database**: SQLite (development), PostgreSQL (production)
+- **Database**: Local database (development), PostgreSQL (production)
 - **Analytics**: Snowflake-compatible SQL queries
 - **Visualization**: Streamlit, Plotly, Tableau-ready exports
 - **NLP**: spaCy, TextBlob, VADER sentiment analysis

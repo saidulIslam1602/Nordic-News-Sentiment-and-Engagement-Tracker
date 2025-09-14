@@ -1,8 +1,6 @@
 # Core Data Processing
 pandas==2.1.4
 numpy==1.24.3
-sqlalchemy==2.0.23
-psycopg2-binary==2.9.9
 
 # Data Pipeline & ETL
 requests==2.31.0
@@ -24,7 +22,9 @@ matplotlib==3.8.2
 seaborn==0.13.0
 
 # Database & Analytics
-sqlite3
+pyodbc==5.0.1
+pymssql==2.2.8
+sqlalchemy==2.0.23
 dbt-core==1.7.4
 snowflake-connector-python==3.6.0
 
