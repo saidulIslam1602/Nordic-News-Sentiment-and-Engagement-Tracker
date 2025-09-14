@@ -31,8 +31,8 @@ This project simulates a real-world data analytics solution for Nordic news medi
 ## 🛠️ Technology Stack
 
 - **Data Processing**: Python, pandas, dbt
-- **Database**: Local database (development), PostgreSQL (production)
-- **Analytics**: Snowflake-compatible SQL queries
+- **Database**: MSSQL Server (development), PostgreSQL (production)
+- **Analytics**: MSSQL Server queries, Snowflake-compatible
 - **Visualization**: Streamlit, Plotly, Tableau-ready exports
 - **NLP**: spaCy, TextBlob, VADER sentiment analysis
 - **Orchestration**: Apache Airflow (simulated)
@@ -130,7 +130,7 @@ docker build -t nordic-news-tracker .
 
 # Run with production configuration
 docker run -d -p 8501:8501 \
-  -e DB_TYPE=postgresql \
+  -e DB_TYPE=mssql \
   -e DB_HOST=your-db-host \
   -e DB_PASSWORD=your-password \
   nordic-news-tracker
